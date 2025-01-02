@@ -1,0 +1,461 @@
+//description.ext
+
+#include "kbf\GarageDisplayDefine.hpp"
+
+#include "taw_vd\GUI.h"
+
+#include "scripts\defines.hpp"
+#include "scripts\control.hpp"
+
+author="thehungryhippo Ported By MrSocomDude";
+OnLoadName = "Dynamic CAS Operations";
+loadScreen = "images\photo.jpg";
+
+debriefing = 1;
+
+class CfgFunctions
+{
+	#include "taw_vd\CfgFunctions.hpp"
+	class kbf
+  	{
+    	class functions
+    	{
+         file = "kbf";
+         class vehDamage {};
+         class garageLoad {};
+         class garageInit {};
+      };
+  };
+};
+
+class Params
+{
+    class NumMissions
+	{
+		title = "任务数量";
+		values[] = {1,3,5,10,9999};
+		texts[] = {"1","3","5","10","Infinite"};
+		default = 9999;
+      isGlobal = 3;
+   };
+
+    class BonusTickets
+	{
+		title = "允许重生（票证）";
+		values[] = {0,2,5,10,9999};
+		texts[] = {"0","2","5","10","Infinite"};
+		default = 9999;
+      isGlobal = 1;
+   };
+
+   class aaCNT
+	{
+		title = "防空炮数量 - AO 中生成的防空炮数量";
+		values[] = {0,1,2,3,4,5,6,7,8,9,10};
+		texts[] = {"0","1","2","3","4","5","6","7","8","9","10"};
+		default = round (random [0,2,8]);
+		isGlobal = 1;
+   };
+
+
+   class tspCNT
+	{
+		title = "运输数量";
+		values[] = {1,2,3,4,5,6};
+		texts[] = {"1","2","3","4","5","6"};
+		default = round (random [3,4,6]);
+		isGlobal = 1;
+   };
+
+   class mrapCNT
+	{
+		title = "防地雷反伏击车数量";
+		values[] = {1,2,3,4,5,6};
+		texts[] = {"1","2","3","4","5","6"};
+		default = round (random [2,4,6]);
+		isGlobal = 1;
+   };
+
+   class apcCNT
+	{
+		title = "APC 数量";
+		values[] = {1,2,3,4,5,6};
+		texts[] = {"1","2","3","4","5","6"};
+		default = round (random [3,5,6]);
+		isGlobal = 1;
+   };
+
+   class tankCNT
+	{
+		title = "坦克数量";
+		values[] = {1,2,3,4,5};
+		texts[] = {"1","2","3","4","5","6"};
+		default = round (random [2,4,6]);
+		isGlobal = 1;
+   };
+
+   class aaSqd
+	{
+		title = "防空小队 - 确定 AO 中是否有防空士兵（防空计数）";
+		values[] = {0,1};
+		texts[] = {"Disabled","Enabled"};
+		default = round (random 1);
+		isGlobal = 1;
+   };
+
+    class JetFreq
+	{
+		title = "喷气机频率——敌方喷气机重生需要多长时间";
+		values[] = {0,5,10,15,30,60};
+		texts[] = {"Instantly","5 Min","10 Min","15 min","30 Min","1 Hour"};
+		default = 15;
+      isGlobal = 1;
+   };
+
+    class jetCNT
+	{
+		title = "喷气机数量 - 每批次产生多少敌方喷气机";
+		values[] = {0,1,2,3,4,5,6,7,8,9,10};
+		texts[] = {"0 (Disabled)","1","2","3","4","5","6","7","8","9","10"};
+		default = round (random[2,3,4]);
+		isGlobal = 1;
+   };
+
+   class HeliFreq
+	{
+		title = "直升机频率";
+		values[] = {0,5,10,15,30,60};
+		texts[] = {"Instantly","5 Min","10 Min","15 min","30 Min","1 Hour"};
+		default = 15;
+      isGlobal = 1;
+   };
+
+   class heliCNT
+	{
+		title = "直升机数量";
+		values[] = {0,1,2,3,4,5,6,7,8,9,10};
+		texts[] = {"0 (Disabled)","1","2","3","4","5","6","7","8","9","10"};
+		default = round (random[2,3,4]);
+		isGlobal = 1;
+   };
+
+	class Weather
+	{
+		title = "天气";
+		values[] = {0,25,50,75,100};
+		texts[] = {"Clear Skies","Fair","Cloudy","Heavy Clouds","Stormy"};
+		default = 0;
+		function = "BIS_fnc_paramWeather";
+		isGlobal = 1;
+   };
+
+	class TimeOfDay
+	{
+		title = "时间";
+		values[] = {4,11,19,0};
+		texts[] = {"Morning","Day","Dusk","Midnight"};
+		default = 11;
+		function = "BIS_fnc_paramDaytime";
+		isGlobal = 1;
+	};
+	
+  class TimeAccel
+   {
+      title = "时间加速";
+      values[] = {1,2,5,10,20};
+      texts[] = {"1x","2x","5x","10x","20x"};
+      default = 1;
+      function = "BIS_fnc_paramTimeAcceleration";
+      isGlobal = 10;
+   };
+};
+
+class CfgDebriefing
+{  
+	class SideLost
+	{
+		title = "Game Over";
+		subtitle = "Your team has been wiped out";
+		pictureBackground = "";
+		picture = "KIA";
+		pictureColor[] = {0.6,0.1,0.2,1};
+		variable = "waveNum";
+	};
+	class SideWon
+	{
+		title = "Mission Complete";
+		subtitle = "Your team has wiped out all the enemies";
+	};
+};
+
+class CfgRespawnInventory
+{
+   class fPilotL
+   {
+      displayName = "Fighter Pilot";
+      icon = "\A3\Ui_f\data\GUI\Cfg\Ranks\captain_gs.paa";
+      role = "FighterPilot";
+
+      weapons[] = {
+         "SMG_01_Holo_F",
+      };
+      magazines[] = {
+         "30Rnd_45ACP_Mag_SMG_01",
+         "30Rnd_45ACP_Mag_SMG_01",
+         "30Rnd_45ACP_Mag_SMG_01",
+         "30Rnd_45ACP_Mag_SMG_01",
+         "SmokeShell",
+         "SmokeShellBlue",
+         "Chemlight_green"
+      };
+      items[] = {
+         "FirstAidKit"
+      };
+      linkedItems[] = {
+         "H_PilotHelmetFighter_B",
+         "ItemMap",
+         "ItemCompass",
+         "ItemWatch",
+         "ItemRadio"
+      };
+      uniformClass = "U_B_PilotCoveralls";
+      backpack = "B_Parachute";
+   };
+};
+
+class CfgRoles
+{
+   class FighterPilot
+   {
+      displayName = "Fighter Pilot";
+      icon = "\A3\Ui_f\data\GUI\Cfg\Ranks\captain_gs.paa";
+   };
+};
+
+class RscTitles {
+
+   class infoHud {
+      idd= 8989;
+      duration = 9999999
+      onLoad = "uiNamespace setVariable [""TAG_infoHud"", _this select 0]";
+      class controls{
+         ////////////////////////////////////////////////////////
+         // GUI EDITOR OUTPUT START (by scott, v1.063, #Jiwyby)
+         ////////////////////////////////////////////////////////
+
+         class aaLabel: RscText69
+         {
+            idc = 5696;
+
+            text = "AAs:"; //--- ToDo: Localize;
+            x = 0.964073 * safezoneW + safezoneX;
+            y = 0.17004 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+            sizeEx = 0.8 * GUI_GRID_H;
+         };
+         class aaResultBox: RscText69
+         {
+            idc = 3678;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.17004 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class jetLabel: RscText69
+         {
+            idc = 23412;
+
+            text = "Jets:"; //--- ToDo: Localize;
+            x = 0.958916 * safezoneW + safezoneX;
+            y = 0.33502 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+         };
+         class heliLabel: RscText69
+         {
+            idc = 5343;
+
+            text = "Helis:"; //--- ToDo: Localize;
+            x = 0.958916 * safezoneW + safezoneX;
+            y = 0.368016 * safezoneH + safezoneY;
+            w = 0.0866269 * safezoneW;
+            h = 0.0549933 * safezoneH;
+         };
+         class vehLabel: RscText69
+         {
+            idc = 6456;
+
+            text = "Ground Vehicles:"; //--- ToDo: Localize;
+            x = 0.917665 * safezoneW + safezoneX;
+            y = 0.137044 * safezoneH + safezoneY;
+            w = 0.103127 * safezoneW;
+            h = 0.0549933 * safezoneH;
+         };
+         class jetResultBox: RscText69
+         {
+            idc = 345325;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.33502 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class heliResultBox: RscText69
+         {
+            idc = 547654;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.368016 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class vehResultBox: RscText69
+         {
+            idc = 54334;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.137044 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class titletext: RscText
+         {
+            idc = 105508;
+
+            text = "Vehicles Remaining"; //--- ToDo: Localize;
+            x = 0.922822 * safezoneW + safezoneX;
+            y = 0.115047 * safezoneH + safezoneY;
+            w = 0.0773454 * safezoneW;
+            h = 0.032996 * safezoneH;
+         };
+         class tsLabel: RscText
+         {
+            idc = 789878;
+
+            text = "Transports:"; //--- ToDo: Localize;
+            x = 0.943447 * safezoneW + safezoneX;
+            y = 0.203036 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+            sizeEx = 0.8 * GUI_GRID_H;
+         };
+         class mrapLabel: RscText69
+         {
+            idc = 09438;
+
+            text = "MRAPs:"; //--- ToDo: Localize;
+            x = 0.95376 * safezoneW + safezoneX;
+            y = 0.236032 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+            sizeEx = 0.8 * GUI_GRID_H;
+         };
+         class apcLabel: RscText69
+         {
+            idc = 2-49;
+
+            text = "APCs:"; //--- ToDo: Localize;
+            x = 0.958916 * safezoneW + safezoneX;
+            y = 0.269028 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+            sizeEx = 0.8 * GUI_GRID_H;
+         };
+         class tankLabel: RscText69
+         {
+            idc = 234521;
+
+            text = "Tanks:"; //--- ToDo: Localize;
+            x = 0.958916 * safezoneW + safezoneX;
+            y = 0.302024 * safezoneH + safezoneY;
+            w = 0.0721891 * safezoneW;
+            h = 0.0549933 * safezoneH;
+            sizeEx = 0.8 * GUI_GRID_H;
+         };
+         class tsResultBox: RscText69
+         {
+            idc = 02988;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.203036 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class mrapResultBox: RscText69
+         {
+            idc = 10984;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.236032 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class apcResultBox: RscText69
+         {
+            idc = 98912;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.269028 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         class tankResultBox: RscText69
+         {
+            idc = 54671;
+
+            text = "0"; //--- ToDo: Localize;
+            x = 0.984698 * safezoneW + safezoneX;
+            y = 0.302024 * safezoneH + safezoneY;
+            w = 0.04125 * safezoneW;
+            h = 0.0550001 * safezoneH;
+         };
+         ////////////////////////////////////////////////////////
+         // GUI EDITOR OUTPUT END
+         ////////////////////////////////////////////////////////
+
+      };
+   };
+   ////////////////////////////////////////////////////////
+   // GUI EDITOR OUTPUT START (by scott, v1.063, #Dunaxy)
+   ////////////////////////////////////////////////////////
+ class introLogo {
+      idd= 8989;
+      duration = 9999999
+      class controls{
+         class LogoPic: RscPicture
+         {
+            idc = 423098;
+            text = "images\logo.paa";
+            x = 0.417498 * safezoneW + safezoneX;
+            y = 0.0820511 * safezoneH + safezoneY;
+            w = 0.206254 * safezoneW;
+            h = 0.384953 * safezoneH;
+         };
+         ////////////////////////////////////////////////////////
+         // GUI EDITOR OUTPUT END
+         ////////////////////////////////////////////////////////
+      };
+   };
+};
+
+class CfgMusic
+{
+	tracks[] = {};
+	class MyIntro
+	{
+		// display name 显示名称
+		name	= "My intro music";
+
+		// filename, volume, pitch
+		sound[]	= { "\music\Arma2ColdWind.ogg", db + 10, 1.0 };
+	};
+};

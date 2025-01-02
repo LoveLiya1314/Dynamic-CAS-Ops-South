@@ -1,0 +1,22 @@
+aaCount = sliderPosition 435654;
+publicVariable "aaCount";
+tspCount = sliderPosition 29085;
+publicVariable "tspCount";
+apcCount = sliderPosition 7678;
+publicVariable "apcCount";
+mrapCount = sliderPosition 26548;
+publicVariable "mrapCount";
+tankCount = sliderPosition 344555;
+publicVariable "tankCount";
+jetCount = sliderPosition 16546;
+publicVariable "jetCount";
+heliCount = sliderPosition 569965;
+publicVariable "heliCount";
+jetSleepTimer = sliderPosition 35667;
+publicVariable "jetSleepTimer";
+heliSleepTimer = sliderPosition 20319;
+publicVariable "heliSleepTimer";
+aaSquad = lbCurSel 80789;
+publicVariable "aaSquad";
+
+"任务参数已更改，并将在下次任务中生效" remoteExec ["systemChat"];
