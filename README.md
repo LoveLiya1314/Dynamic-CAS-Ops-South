@@ -5,7 +5,7 @@
 
 ----
 
-[![steam](https://img.shields.io/badge/Steam-Goto%20)](https://steamcommunity.com/sharedfiles/filedetails/?id=2949924505&searchtext=Dynamic+CAS+Ops)
+[![steam](./images/steam.svg)](https://steamcommunity.com/sharedfiles/filedetails/?id=2949924505&searchtext=Dynamic+CAS+Ops)
 
 
 
